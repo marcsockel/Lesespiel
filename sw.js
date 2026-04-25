@@ -1,11 +1,12 @@
-const CACHE = 'lesespiel-v2';
+const CACHE = 'lesespiel-v3';
 
-// Nur kleine Dateien beim Install pre-cachen.
-// Lesespiel.bin ist zu groß – wird beim ersten Aufruf lazy gecacht.
 const PRE_CACHE = [
   './index.html',
   './manifest.json'
 ];
+
+// Große Binärdateien direkt durchleiten – kein Caching
+const BYPASS = ['.bin', '.data', '.wasm'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -24,11 +25,15 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const url = e.request.url;
+  if (BYPASS.some(ext => url.endsWith(ext))) {
+    // Große Dateien immer direkt vom Netz – kein Cache
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(response => {
-        // Nur gültige same-origin Antworten cachen
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
