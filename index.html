@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en-us">
    <head>
-        <title>Lesespiel</title>
+        <title>Lesespiel3</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
@@ -71,19 +71,13 @@
             }
         </style>
 
-        <!-- PWA / Apple -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content="Lesespiel">
-        <meta name="theme-color" content="#000000">
-
-        <!-- Manifest -->
         <link rel="manifest" href="manifest.json">
-
-        <!-- Service Worker -->
         <script>
           if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
               navigator.serviceWorker.register('sw.js');
             });
           }
@@ -236,7 +230,7 @@ k.p.toString(16)+", data=0x"+p.toString(16)))}return m};t.L=function(a){this.j=a
 						    break;
 				    }
 			    };
-          xml.open('GET', "Lesespiel.bin", true);
+          xml.open('GET', "Lesespiel3.bin", true);
           xml.responseType = 'arraybuffer';
           xml.send(null);
     </script>

@@ -1,16 +1,8 @@
-const CACHE = 'lesespiel-v3';
-
-const PRE_CACHE = [
-  './index.html',
-  './manifest.json'
-];
-
-// Große Binärdateien direkt durchleiten – kein Caching
-const BYPASS = ['.bin', '.data', '.wasm'];
+const CACHE = 'lesespiel-v1';
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRE_CACHE))
+    caches.open(CACHE).then(c => c.addAll(['./index.html', './manifest.json']))
   );
   self.skipWaiting();
 });
@@ -25,20 +17,21 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  const url = e.request.url;
-  if (BYPASS.some(ext => url.endsWith(ext))) {
-    // Große Dateien immer direkt vom Netz – kein Cache
+  const path = new URL(e.request.url).pathname;
+
+  // Binärdateien nie anfassen – Browser übernimmt nativ
+  if (path.endsWith('.bin') || path.endsWith('.data') || path.endsWith('.wasm')) {
     return;
   }
+
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
+        if (response && response.status === 200 && response.type === 'basic') {
+          const clone = response.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
         }
-        const clone = response.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
         return response;
       });
     })
