@@ -1,4 +1,4 @@
-const CACHE = 'lesespiel-v3';
+const CACHE = 'lesespiel-v4';
 
 self.addEventListener('install', e => {
   e.waitUntil(
