@@ -3,7 +3,7 @@
    <head>
         <title>Lesespiel</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
         <style>
             body {
               background-color: black;
@@ -63,11 +63,16 @@
                 height: -webkit-fill-available;
               }
             }
-            canvas {
+            /* Touch-Gesten des Browsers ueberall abschalten – nicht nur auf dem
+               Canvas. Sonst wartet Safari am Rand (ausserhalb/an der Kante des
+               Canvas) auf Doppeltipp-Zoom, Scrollen oder Text-Lupe. */
+            html, body, body > div, canvas {
                 touch-action: none;
+                overscroll-behavior: none;
                 user-select: none;
                 -webkit-user-select: none;
                 -webkit-touch-callout: none;
+                -webkit-tap-highlight-color: transparent;
             }
         </style>
 	   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -235,6 +240,10 @@ k.p.toString(16)+", data=0x"+p.toString(16)))}return m};t.L=function(a){this.j=a
           xml.send(null);
     </script>
     <script>
+      // Scrollen, Gummiband und Pinch-Zoom von iOS unterbinden
+      document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+      document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+      document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
       window.addEventListener('load',function(){window.focus()});
       window.addEventListener('mousedown', function () {
         document.activeElement.blur();
